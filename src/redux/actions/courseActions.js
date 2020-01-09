@@ -1,4 +1,27 @@
+ import * as types  from  "./actionTypes"
+ import * as courseApi from "../../api/courseApi";
 //action creator
-export  function createCourse(course){
-   return {type:"CREATE_COURSE",course:course};
+//dispatch is injected cos of redux-thunk
+export  function createCourse(course){   
+   return {type:types.CREATE_COURSE,course:course};
 }
+
+export function loadCourseSuccess(courses) {
+  return { type: types.LOAD_COURSES_SUCCESS, courses };
+}
+
+export function loadCourses() {
+
+  return function(dispatch) {
+    return courseApi
+      .getCourses()
+      .then(courses => {
+        dispatch(loadCourseSuccess(courses));
+      })
+      .catch(error => {
+        throw error;
+      });
+  };
+}
+
+

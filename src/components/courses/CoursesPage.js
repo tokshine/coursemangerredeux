@@ -1,74 +1,75 @@
 import React from "react";
 import {connect} from "react-redux";
-import * as courseAction from "../../redux/actions/courseActions";
+import * as courseActions from "../../redux/actions/courseActions";
+import * as authorActions from "../../redux/actions/authorActions";
 import PropTypes  from 'prop-types';
-
+import {bindActionCreators} from 'redux';
+import CourseList from './CourseList';
 class CoursesPage extends React.Component {
-  // constructor(props){
-  //   super(props);
   
+  componentDidMount(){
+    this.props.actions.loadCourses().catch(error=>{
+      alert("laoding courses failed"+error);
+    });
 
-  // this.state = {
-  //   course:{
-  //     title :""
-  //   }
-  // };
-  
+    this.props.actions.loadAuthors().catch(error=>{
+      alert("laoding authors failed"+error);
+    })
+  }
 
-  state = {
-    course:{
-      title :""     
-    }
- };
-
-
-
-// handelChange(event){
-//   const course = {...this.state.course,title:event.target.value}; //values on the right override those on the left
-//   this.setState({course:course});
-// }
-
-//this is more modern it allows you to take out the constructor and this keyword
-handelChange= event =>{
-  const course = {...this.state.course,title:event.target.value}; //values on the right override those on the left
-  //console.log(event.target.value);
-  this.setState({course:course}); // using the object shorthand syntax it becomes this.setState({course}); 
-  
-};
-
-handleSubmit = event =>{
-  event.preventDefault();
-  //alert(this.state.course.title);
-  this.props.dispatch(courseAction.createCourse(this.state.courses));
-};
-  
   render() {
     return (
-    <form onSubmit={this.handleSubmit}>
-      <h3>Add course</h3>
-      <input type = "text" onChange={this.handelChange} value={this.state.course.title}/>
-        <input type="submit" value="Save"/>
+    <>
+      <h3>Courses</h3>
+    
+       <CourseList courses ={this.props.courses} />
        
-        {this.props.courses.map(course => (
-          <div key={course.id}>{course.title}</div>
-        ))}
-    </form>
+   </>
     )
   }
 }
 
 CoursesPage.propTypes = {
-  courses:PropTypes.array,
-  dispatch:PropTypes.func.isRequired
-    
+  courses:PropTypes.array.isRequired,
+  authors: PropTypes.array.isRequired,
+  actions:PropTypes.object.isRequired
+ 
 };
 
-function mapStateToProps(state){
-     return{
-       courses:state.courses
-     };
+//destructing synatx
+// function mapStateToProps({course}){
+//   return {
+//     courses
+//   };
+// }
+
+function mapStateToProps(state) {
+  return {
+    courses:
+      state.authors.length === 0
+        ? []
+        : state.courses.map(course => {
+            return {
+              ...course,
+              authorName: state.authors[0].name
+              //state.authors.find(a => a.id === course.authorId).name
+            };
+          }),
+    authors: state.authors
+  };
+}
+//this approach would expose all the actions as props
+function mapDispatchToProps(dispatch){
+  return {
+    actions:{
+      loadCourses:bindActionCreators(courseActions.loadCourses,dispatch)  ,
+      loadAuthors:bindActionCreators(authorActions.loadAuthors,dispatch)  ,
+
+    }
+     //   note action creators are called by dispatch
+  };
 }
 
 
 
-export default connect (mapStateToProps) (CoursesPage);
+export default connect (mapStateToProps,mapDispatchToProps) (CoursesPage);
