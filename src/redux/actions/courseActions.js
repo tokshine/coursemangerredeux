@@ -10,6 +10,15 @@ export function loadCourseSuccess(courses) {
   return { type: types.LOAD_COURSES_SUCCESS, courses };
 }
 
+export function createCourseSuccess(course) {
+  return { type: types.CREATE_COURSE_SUCCESS, course };
+}
+
+export function updateCourseSuccess(course) {
+  return { type: types.UPDATE_COURSE_SUCCESS, course };
+}
+
+
 export function loadCourses() {
 
   return function(dispatch) {
@@ -17,6 +26,23 @@ export function loadCourses() {
       .getCourses()
       .then(courses => {
         dispatch(loadCourseSuccess(courses));
+      })
+      .catch(error => {
+        throw error;
+      });
+  };
+}
+
+export function saveCourse(course) {
+  //eslint-disable-next-line no-unused-vars
+  //note  getstate is optional but could handy giving access to the redux store 
+  return function(dispatch, getState) {
+    return courseApi
+      .saveCourse(course)
+      .then(savedCourse => {
+        course.id
+          ? dispatch(updateCourseSuccess(savedCourse))
+          : dispatch(createCourseSuccess(savedCourse));
       })
       .catch(error => {
         throw error;
