@@ -32,7 +32,8 @@ server.use(jsonServer.bodyParser);
 
 // Simulate delay on all requests
 server.use(function(req, res, next) {
-  setTimeout(next, 0);
+  //setTimeout(next, 0);
+  setTimeout(next, 5000); //let allow a delay to our mock api by 2secs
 });
 
 // Declaring custom routes below. Add custom routes before JSON Server router

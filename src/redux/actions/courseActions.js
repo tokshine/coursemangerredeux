@@ -1,5 +1,6 @@
  import * as types  from  "./actionTypes"
  import * as courseApi from "../../api/courseApi";
+ import {beginApiCall} from "./apiStatusActions";
 //action creator
 //dispatch is injected cos of redux-thunk
 export  function createCourse(course){   
@@ -22,6 +23,7 @@ export function updateCourseSuccess(course) {
 export function loadCourses() {
 
   return function(dispatch) {
+    dispatch(beginApiCall());   
     return courseApi
       .getCourses()
       .then(courses => {
@@ -37,6 +39,7 @@ export function saveCourse(course) {
   //eslint-disable-next-line no-unused-vars
   //note  getstate is optional but could handy giving access to the redux store 
   return function(dispatch, getState) {
+    dispatch(beginApiCall());
     return courseApi
       .saveCourse(course)
       .then(savedCourse => {
