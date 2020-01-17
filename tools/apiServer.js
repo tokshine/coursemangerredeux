@@ -33,7 +33,7 @@ server.use(jsonServer.bodyParser);
 // Simulate delay on all requests
 server.use(function(req, res, next) {
   //setTimeout(next, 0);
-  setTimeout(next, 5000); //let allow a delay to our mock api by 2secs
+  setTimeout(next, 2000); //let allow a delay to our mock api by 2secs
 });
 
 // Declaring custom routes below. Add custom routes before JSON Server router
@@ -76,6 +76,7 @@ function createSlug(value) {
     .toLowerCase();
 }
 
+//server side validation
 function validateCourse(course) {
   if (!course.title) return "Title is required.";
   if (!course.authorId) return "Author is required.";
