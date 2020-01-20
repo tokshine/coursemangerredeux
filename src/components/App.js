@@ -5,7 +5,9 @@ import AboutPage from "./about/AboutPage";
 import Header from "./common/Header";
 import PageNotFound from "./PageNotFound";
 import CoursesPage from "./courses/CoursesPage";
-import ManageCoursePage from "./courses/ManageCoursePage";
+// eslint-disable-line import/no-named-as-default 
+//--disabling warning message note we are interested in the connected component which is default
+import ManageCoursePage from "./courses/ManageCoursePage"; 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
